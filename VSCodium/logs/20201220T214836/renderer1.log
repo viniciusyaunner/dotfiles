@@ -1,2 +1,0 @@
-[2020-12-20 21:48:37.757] [renderer1] [error] [File Watcher (node.js)] Error: ENOENT: no such file or directory, stat '/home/somno/.config/.vscode'
-[2020-12-20 23:45:41.181] [renderer1] [error] [text file model] handleSaveError(9) - exit - resulted in a save error: Error: Unable to write file '/usr/share/gtk-2.0/gtkrc' (NoPermissions (FileSystemError): Error: EACCES: permission denied, open '/usr/share/gtk-2.0/gtkrc') file:///usr/share/gtk-2.0/gtkrc

@@ -1,1 +1,0 @@
-[2020-12-21 00:04:12.366] [renderer1] [error] [File Watcher (node.js)] Error: ENOENT: no such file or directory, stat '/home/somno/.config/.vscode'
