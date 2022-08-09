@@ -13,8 +13,12 @@ set $mod Mod4
 
 # Font for window titles. Will also be used by the bar unless a different font
 # is used in the bar {} block below.
-font pango:monopace 8
 
+
+for_window [class=".*"] border pixel 3
+
+font pango:terminus 14
+title_align center
 # This font is widely installed, provides lots of unicode glyphs, right-to-left
 # text rendering and scalability on retina/hidpi displays (thanks to pango).
 #font pango:DejaVu Sans Mono 8
@@ -80,6 +84,11 @@ bindsym $mod+v split v
 
 # enter fullscreen mode for the focused container
 bindsym $mod+f fullscreen toggle
+
+#interactive screenshot by pressing printscreen
+bindsym Print exec gnome-screenshot -i 
+#crop-area screenshot by pressing Mod + printscreen
+bindsym $mod+Print exec gnome-screenshot -a
 
 # change container layout (stacked, tabbed, toggle split)
 bindsym $mod+s layout stacking
@@ -168,15 +177,18 @@ mode "resize" {
 }
 
 bindsym $mod+r mode "resize"
-
+bindsym $mod+Ctrl+Shift+Right resize shrink width 10 px or 10 ppt
+bindsym $mod+Ctrl+Shift+Up resize grow height 10 px or 10 ppt
+bindsym $mod+Ctrl+Shift+Down resize shrink height 10 px or 10 ppt
+bindsym $mod+Ctrl+Shift+Left resize grow width 10 px or 10 ppt
 # Start i3bar to display a workspace bar (plus the system information i3status
 # finds out, if available)
 
 # Theme colors
 #class                  border   backgr.  text  indicator
-client.focused          #dfdfdf #2b1e3e #dfdfdf #cad0c4
-client.focused_inactive #2b1e3e #dfdfdf #161616
-client.unfocused        #2b1e3e #dfdfdf #161616
+client.focused          #dfdfdf #410a89 #dfdfdf #cad0c4
+client.focused_inactive #2b1e3e #d39deb #161616
+client.unfocused        #2b1e3e #d39deb #161616
 client.urgent           #a5a5a5 #a5a5a5 #1E1E1E
 client.background       #dfdfdf
  
@@ -187,10 +199,11 @@ exec --no-startup-id nitrogen --restore
 exec --no-startup-id compton &
 #exec --no-startup-id nm-applet &
 #exec --no-startup-id conky --pause 5
-exec --no-startup-id mpd
+#exec --no-startup-id mpd
 exec --no-startup-id polybar -r example
 exec --no-startup-id telegram-desktop
-exec --no-startup-id wal -i ~/Imagens/1606342069010.png
+exec --no-startup-id lxappearance
+exec --no-startup-id wal -i /home/somno/Imagens/source/beauty-death.png
 # Aplições abertar em modo Floating
 for_window [class="Nitrogen"] floating enable sticky enable border normal
  
