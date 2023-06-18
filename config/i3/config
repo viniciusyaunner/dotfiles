@@ -37,7 +37,7 @@ floating_modifier $mod
 bindsym $mod+Return exec xfce4-terminal
 
 #atalhos
-bindsym $mod+b exec firefox
+bindsym $mod+b exec opera
 bindsym $mod+t exec Thunar
 
 
@@ -196,14 +196,13 @@ client.background       #dfdfdf
 #exec --no-startup-id 
 #exec --no-startup-id 
 exec --no-startup-id nitrogen --restore
-exec --no-startup-id compton &
+exec --no-startup-id picom &
 #exec --no-startup-id nm-applet &
 #exec --no-startup-id conky --pause 5
 #exec --no-startup-id mpd
 exec --no-startup-id polybar -r example
 exec --no-startup-id telegram-desktop
-exec --no-startup-id lxappearance
-exec --no-startup-id wal -i /home/somno/Imagens/source/beauty-death.png
+exec --no-startup-id wal -i $HOME/Pictures/wallpaper.jpg
 # Aplições abertar em modo Floating
 for_window [class="Nitrogen"] floating enable sticky enable border normal
  
