@@ -54,7 +54,6 @@ PKGS=(
         'lxappearance'
         'xfce4-terminal'
         'xdg-user-dirs'
-        'opera'
         'alsa-utils' 
         'pavucontrol'
         'w3m'
