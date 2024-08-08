@@ -64,7 +64,7 @@ PKGS=(
 
 for PKG in "${PKGS[@]}"; do
     echo "INSTALLING: ${PKG}"
-    sudo pacman -S "$PKG"
+    pacman -S "$PKG"
 done
 
 xdg-user-dirs-update
@@ -81,14 +81,14 @@ sudo systemctl enable bluetooth
 #sudo systemctl mask systemd-rfkill.socket
 
 #SSD
-sudo systemctl enable fstrim.timer
+systemctl enable fstrim.timer
 
 yay -S oh-my-zsh-git nerd-fonts-hack meowfetch pa-applet-git
 
 chsh -l
 chsh -s /usr/bin/zsh
 
-sudo git clone https://github.com/bhilburn/powerlevel9k.git /usr/share/oh-my-zsh/themes/powerlevel9k 
+git clone https://github.com/bhilburn/powerlevel9k.git /usr/share/oh-my-zsh/themes/powerlevel9k 
 
 cp .zshrc ~/.zshrc
 
