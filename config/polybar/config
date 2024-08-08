@@ -1,32 +1,31 @@
                      
 [colors]
 ;background = ${xrdb:color0:#222}
-background = #aa410a89
-background-alt = #aa2a1944
+background = #BA0e0120
+background-alt = #7D0e0120
 ;foreground = ${xrdb:color7:#222}
 foreground = #dfdfdf
 foreground-alt = #555
-primary = #dfdfdf
-secondary = #e60053
-alert = #bd2c40
+primary = #d39deb
+secondary = #E6005496
+alert = #F404F4
 
 [bar/main]
 ;monitor = ${env:MONITOR:HDMI-1}
 width = 100%
-height = 40
+height = 45px
 ;offset-x = 1%
 ;offset-y = 1%
 radius = 0
-fixed-center = false
+fixed-center = true
 enable-ipc = true
 background = ${colors.background}
 foreground = ${colors.foreground}
 
-line-size = 1
-line-color = #d39deb
+line-size = 3
 
-border-size = 2.5
-border-color = #d39deb
+border-size = 3
+border-color = #dfdfdf
 
 padding-left = 0
 padding-right = 1
@@ -34,16 +33,16 @@ padding-right = 1
 module-margin-left = 0
 module-margin-right = 2
 
-font-0 = 3270 Nerd Font:pixelsize=18;1
-font-1 = unifont:fontformat=truetype:size=14:antialias=false;0
-font-2 = JetBrainsMono Nerd Font:style=Regular:pixelsize=14;3
+font-0 = 3270 Nerd Font:pixelsize=16.5;1
+font-1 = unifont:fontformat=truetype:size=1:antialias=false;0
+font-2 = JetBrainsMono Nerd Font:style=Regular:pixelsize=16;5
 
 modules-left = i3 xwindow
 modules-center = spotify spotify-prev spotify-play-pause spotify-next
-modules-right =  network xbacklight pulseaudio cpu wlan eth temperature battery date powermenu
+modules-right =   xbacklight pulseaudio cpu wlan eth temperature network popup-calendar battery powermenu
 
-tray-position = right
-tray-padding = 2
+tray-position = left
+tray-padding = 10%
 ;tray-background = #0063ff
 
 ;wm-restack = bspwm
@@ -59,6 +58,19 @@ tray-padding = 2
 
 cursor-click = pointer
 cursor-scroll = ns-resize
+
+[module/popup-calendar]
+type = custom/script
+exec = /home/somno/.config/polybar/scripts/popup_calendar.sh
+interval = 5
+click-left =  /home/somno/.config/polybar/scripts/popup_calendar.sh --popup &
+
+[module/ipc-dunst]
+type = custom/ipc
+initial = 1
+hook-0 = echo "%{A1:notify-send "DUNST_COMMAND_PAUSE" && polybar-msg hook ipc-dunst 2:}%{A} " &
+hook-1 = echo "%{A1:notify-send "DUNST_COMMAND_RESUME" && polybar-msg hook ipc-dunst 1:}%{F#ff2200}%{F-}%{A} " &
+
 
 [module/spotify]
 type = custom/script
@@ -79,8 +91,8 @@ click-left = playerctl previous -p spotify
 [module/spotify-play-pause]
 type = custom/ipc
 fixed-center = true
-hook-0 = echo "󰏦"
-hook-1 = echo "󰐍"
+hook-0 = echo " 󰏦 "
+hook-1 = echo " 󰐍 "
 initial = 1
 click-left = playerctl play-pause -p spotify
 
@@ -93,7 +105,8 @@ click-left = playerctl next -p spotify
 
 [module/xwindow]
 type = internal/xwindow
-label = %title:0:30:...%
+label = %title%
+label-maxlen = 25
 
 [module/xkeyboard]
 type = internal/xkeyboard
@@ -156,16 +169,15 @@ wrapping-scroll = false
 ; Only show workspaces on the same output as the bar
 ;pin-workspaces = true
 
-label-mode-padding = 9
-label-mode-foreground = #000
-label-mode-background = ${colors.primary}
+label-mode-padding = 2
+label-mode-foreground = #910D0D
+;label-mode-underline = ${colors.alert}
 
 ; focused = Active workspace on focused monitor
 label-focused = %index%
 label-focused-background = ${module/bspwm.label-focused-background}
-;label-focused-underline = ${module/bspwm.label-focused-underline}
-label-focused-padding = ${module/bspwm.label-focused-padding}
-
+label-focused-underline = ${colors.alert}
+label-focused-padding = 2
 ; unfocused = Inactive workspace on any monitor
 label-unfocused = %index%
 label-unfocused-padding = ${module/bspwm.label-occupied-padding}
@@ -178,35 +190,85 @@ label-visible-padding = ${self.label-focused-padding}
 
 ; urgent = Workspace with urgency hint set
 label-urgent = %index%
-label-urgent-background = ${module/bspwm.label-urgent-background}
+label-urgent-background = ${colors.secondary}
 label-urgent-padding = ${module/bspwm.label-urgent-padding}
+label-urgent-underline = ${colors.alert}
 
 ; Separator in between workspaces
 label-separator = |
-
 [module/xbacklight]
 type = internal/xbacklight
 
 format = <label> <ramp-volume>
 label = BL
 
-ramp-volume-0 = 
-ramp-volume-1 = 
-ramp-volume-2 = 
+ramp-volume-0 = 🌕
+ramp-volume-1 = 🌔
+ramp-volume-2 = 🌓
+ramp-volume-3 = 🌒
+ramp-volume-4 = 🌑
 ramp-volume-foreground = ${colors.foreground-alt}
 
-[module/backlight-acpi]
-inherit = module/xbacklight
+[module/backlight]
 type = internal/backlight
+
+; Use the following command to list available cards:
+; $ ls -1 /sys/class/backlight/
+; Default: first usable card in /sys/class/backlight (new in version 3.7.0)
 card = intel_backlight
+
+; Use the `/sys/class/backlight/.../actual-brightness` file
+; rather than the regular `brightness` file.
+; New in version 3.6.0
+; Changed in version: 3.7.0: Defaults to true also on amdgpu backlights
+; Default: true
+use-actual-brightness = true
+
+; Interval in seconds after which after which the current brightness is read
+; (even if no update is detected).
+; Use this as a fallback if brightness updates are not registering in polybar
+; (which happens if the use-actual-brightness is false).
+; There is no guarantee on the precisio of this timing.
+; Set to 0 to turn off
+; New in version 3.7.0
+; Default: 0 (5 if use-actual-brightness is false)
+poll-interval = 0
+
+; Default: false
+enable-scroll = true
+
+; Interval for changing the brightness (in percentage points).
+; New in version 3.7.0
+; Default: 5
+scroll-interval = 2
+; Available tags:
+;   <label> (default)
+;   <ramp>
+;   <bar>
+format = <label> 
+
+; Available tokens:
+;   %percentage% (default)
+label = %percentage%%
+
+; Only applies if <ramp> is used
+ramp-0 = 🌕
+ramp-1 = 🌔
+ramp-2 = 🌓
+ramp-3 = 🌒
+ramp-4 = 🌑
+bar-width = 10
+bar-indicator = |
+bar-fill = ─
+bar-empty = ─
 
 [module/cpu]
 type = internal/cpu
 interval = 2
-format-prefix = "  "
+format-prefix = " "
 format-prefix-foreground = ${colors.foreground}
 ;format-underline = #f90000
-label = %percentage:2%%
+label = " %percentage%%"
 
 [module/memory]
 type = internal/memory
@@ -381,12 +443,16 @@ label-volume =   %percentage%%
 label-volume-foreground = ${root.foreground}
 
 label-muted = 🔇 muted
-label-muted-foreground = #666
+label-muted-foreground = ${colors.foreground}
+label-muted-underline = ${colors.alert}
+label-muted-padding = 2
 
-ramp-volume-0 = 
-ramp-volume-1 = 
-ramp-volume-2 = 
-ramp-volume-foreground = ${colors.foreground-alt}
+ramp-volume-0 = 🌕
+ramp-volume-1 = 🌔
+ramp-volume-2 = 🌓
+ramp-volume-3 = 🌒
+ramp-volume-4 = 🌑
+ramp-volume-foreground = ${colors.foreground}
 
 [module/alsa]
 type = internal/alsa
@@ -399,10 +465,12 @@ format-muted-prefix = " "
 format-muted-foreground = ${colors.primary}
 label-muted = sound muted
 
-ramp-volume-0 = 
-ramp-volume-1 = 
-ramp-volume-2 = 
-ramp-volume-foreground = ${colors.foreground-alt}
+ramp-volume-0 = 🌕
+ramp-volume-1 = 🌔
+ramp-volume-2 = 🌓
+ramp-volume-3 = 🌒
+ramp-volume-4 = 🌑
+ramp-volume-foreground = ${colors.foreground}
 
 [module/temperature]
 type = internal/temperature
@@ -434,29 +502,14 @@ warn-temperature = 60
 
 [module/battery]
 type = internal/battery
-
-; This is useful in case the battery never reports 100% charge
 ; Default: 100
 full-at = 99
-
-; format-low once this charge percentage is reached
 ; Default: 10
 ; New in version 3.6.0
-low-at = 5
-
-; Use the following command to list batteries and adapters:
+low-at = 15
 ; $ ls -1 /sys/class/power_supply/
-battery = BAT0
-adapter = ADP1
-
-; If an inotify event haven't been reported in this many
-; seconds, manually poll for new values.
-;
-; Needed as a fallback for systems that don't report events
-; on sysfs/procfs.
-;
-; Disable polling by setting the interval to 0.
-;
+battery = BAT1
+adapter = ACAD
 ; Default: 5
 poll-interval = 5
 ; see "man date" for details on how to format the time string
@@ -482,7 +535,7 @@ format-discharging = <ramp-capacity> <label-discharging>
 ;   <label-full> (default)
 ;   <bar-capacity>
 ;   <ramp-capacity>
-;format-full = <ramp-capacity> <label-full>
+format-full = <ramp-capacity> <label-full>
 
 ; Format used when battery level drops to low-at
 ; If not defined, format-discharging is used instead.
@@ -499,19 +552,19 @@ format-discharging = <ramp-capacity> <label-discharging>
 ;   %percentage_raw%
 ;   %time%
 ;   %consumption% (shows current charge rate in watts)
-label-charging = Charging %percentage%%
+label-charging = " %percentage%%"
 
 ; Available tokens:
 ;   %percentage% (default) - is set to 100 if full-at is reached
 ;   %percentage_raw%
 ;   %time%
 ;   %consumption% (shows current discharge rate in watts)
-label-discharging = Discharging %percentage%%
+label-discharging = " %percentage%%"
 
 ; Available tokens:
 ;   %percentage% (default) - is set to 100 if full-at is reached
 ;   %percentage_raw%
-label-full = Fully charged
+label-full = " Full"
 
 ; Available tokens:
 ;   %percentage% (default) - is set to 100 if full-at is reached
@@ -519,33 +572,33 @@ label-full = Fully charged
 ;   %time%
 ;   %consumption% (shows current discharge rate in watts)
 ; New in version 3.6.0
-label-low = BATTERY LOW
+label-low = " BATTERY LOW"
 
 ; Only applies if <ramp-capacity> is used
-ramp-capacity-0 = 
-ramp-capacity-1 = 
-ramp-capacity-2 = 
-ramp-capacity-3 = 
-ramp-capacity-4 = 
+ramp-capacity-0 =  
+ramp-capacity-1 =  
+ramp-capacity-2 =  
+ramp-capacity-3 =      
+ramp-capacity-4 =   
 
 ; Only applies if <bar-capacity> is used
 bar-capacity-width = 10
 
 ; Only applies if <animation-charging> is used
-animation-charging-0 = 
-animation-charging-1 = 
-animation-charging-2 = 
-animation-charging-3 = 
-animation-charging-4 = 
+animation-charging-0 =  
+animation-charging-1 =  
+animation-charging-2 =  
+animation-charging-3 =  
+animation-charging-4 =  
 ; Framerate in milliseconds
 animation-charging-framerate = 750
 
 ; Only applies if <animation-discharging> is used
-animation-discharging-0 = 
-animation-discharging-1 = 
-animation-discharging-2 = 
-animation-discharging-3 = 
-animation-discharging-4 = 
+animation-discharging-0 =  
+animation-discharging-1 =  
+animation-discharging-2 =  
+animation-discharging-3 =  
+animation-discharging-4 =  
 ; Framerate in milliseconds
 animation-discharging-framerate = 500
 
@@ -555,42 +608,63 @@ animation-low-0 = !
 animation-low-1 = 
 animation-low-framerate = 200
 
+
 [module/powermenu]
 type = custom/menu
-
-expand-right = true
-
+expand-left = true
 format-spacing = 1
 
-label-open = ⏻
-label-open-foreground = ${colors.secondary}
-label-close = X
-label-close-foreground = ${colors.secondary}
-label-separator = .
-label-separator-foreground = ${colors.primary}
+label-open = "󰤆 "
+label-open-foreground = ${colors.urgent}
+label-close = "󰖭 "
+label-close-foreground = ${colors.alert}
+label-separator = |
+label-separator-foreground = ${colors.foreground}
 
-menu-0-0 = reboot
+;Powermenu
+menu-0-0 = "Reboot "
 menu-0-0-exec = menu-open-1
-menu-0-1 = power off
+menu-0-0-foreground = ${colors.urgent}
+
+menu-0-1 = "Power Off"
 menu-0-1-exec = menu-open-2
+menu-0-1-foreground = ${colors.urgent}
 
-menu-1-1 = reboot
-menu-1-1-exec = shutdown -r now
-menu-1-0 = X
+menu-0-2 = "Hibernate"
+menu-0-2-exec = menu-open-3
+menu-0-2-foreground = ${colors.warning}
+
+;Reboot
+menu-1-0 = "Cancel"
 menu-1-0-exec = menu-open-0
+menu-1-0-foreground = ${colors.success}
+menu-1-1 = "Reboot"
+menu-1-1-exec = systemctl reboot
+menu-1-1-foreground = ${colors.urgent}
 
-menu-2-0 = power off
-menu-2-0-exec = shutdown -h now
-menu-2-1 = X
+;Shutdown
+menu-2-0 = "Power off"
+menu-2-0-exec = systemctl poweroff
+menu-2-0-foreground = ${colors.urgent}
+menu-2-1 = "Cancel"
 menu-2-1-exec = menu-open-0
+menu-2-1-foreground = ${colors.success}
+
+;Hibernate
+menu-3-0 = "Hibernate "
+menu-3-0-exec = systemctl hibernate
+menu-3-0-foreground = ${colors.urgent}
+menu-3-1 = "Cancel"
+menu-3-1-exec = menu-open-0
+menu-3-1-foreground = ${colors.success}
 
 [settings]
 screenchange-reload = true
 ;compositing-background = xor
 ;compositing-background = screen
 ;compositing-foreground = source
-;compositing-border = over
-;pseudo-transparency = false
+compositing-border = over
+pseudo-transparency = true
 
 [global/wm]
 margin-top = 5
