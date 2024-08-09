@@ -32,10 +32,9 @@ PKGS=(
         'code'
         'i3-gaps'           
         'i3ipc-glib-git' 
-        '3lock-color'            
         'polybar'           
         'network-manager-applet'      
-        'sddm'                  
+        'lightdm'                  
         'rofi'
         'nitrogen'
         'pulseaudio'
@@ -43,9 +42,7 @@ PKGS=(
         'python-pip'
         'zsh'
         'dunst'
-        'dolphin'
         'picom'
-        'ranger'
         'btop'
         'terminus-font'
         'gnome-screenshot'
@@ -97,6 +94,14 @@ curl https://cypherpunks.com.br/artes/Artistas/Vinicius%20Yaunner/flower-cypher.
 
 mv pywallbase.png ~/Pictures
 mv wallpaper.jpg ~/Pictures
+
+
+git clone https://aur.archlinux.org/lightdm-webkit2-theme-glorious.git
+cd lightdm-webkit2-theme-glorious
+makepkg -sri
+sudo sed -i 's/^\(#?greeter\)-session\s*=\s*\(.*\)/greeter-session = lightdm-webkit2-greeter #\1/ #\2g' /etc/lightdm/lightdm.conf
+
+cd $HOME
 
 echo
 echo "Done!"
