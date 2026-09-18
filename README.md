@@ -1,6 +1,6 @@
 
 # Just my dotfiles 
 
-Grub Source [virtuaverse](https://github.com/Patato777/dotfiles/tree/main) 
+I migrated my dotfiles to [Codeberg](https://codeberg.org/viniciusyaunner/hyprlands-vaporwave).
 
 ![screenshot](screenshot.png)
